@@ -25,9 +25,6 @@ class TestHomePage(TestCase):
         ]
         News.objects.bulk_create(all_news)
 
-# news/tests/test_content.py
-...
-
     def test_news_order(self):
         response = self.client.get(self.HOME_URL)
         object_list = response.context['object_list']
