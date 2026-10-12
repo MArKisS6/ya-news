@@ -34,3 +34,4 @@ class TestHomePage(TestCase):
         sorted_dates = sorted(all_dates, reverse=True)
         # Проверяем, что исходный список был отсортирован правильно.
         self.assertEqual(all_dates, sorted_dates)
+
