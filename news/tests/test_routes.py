@@ -8,6 +8,10 @@ from news.models import News
 
 class TestRoutes(TestCase):
 
+    @classmethod
+    def setUpTestData(cls):
+        cls.news = News.objects.create(title='Заголовок', text='Текст')
+
     def test_home_page(self):
         url = reverse('news:home')
         response = self.client.get(url)
