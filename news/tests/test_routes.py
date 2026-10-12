@@ -40,3 +40,19 @@ class TestRoutes(TestCase):
                 url = reverse(name, args=args)
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
+
+    def test_availability_for_comment_edit_and_delete(self):
+        users_statuses = (
+            (self.author, HTTPStatus.OK),
+            (self.reader, HTTPStatus.NOT_FOUND),
+        )
+        for user, status in users_statuses:
+            # Логиним пользователя в клиенте:
+            self.client.force_login(user)
+            # Для каждой пары "пользователь - ожидаемый ответ"
+            # перебираем имена тестируемых страниц:
+            for name in ('news:edit', 'news:delete'):  
+                with self.subTest(user=user, name=name):        
+                    url = reverse(name, args=(self.comment.id,))
+                    response = self.client.get(url)
+                    self.assertEqual(response.status_code, status)
