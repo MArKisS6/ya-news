@@ -1,3 +1,4 @@
+# news/tests/test_routes.py
 from http import HTTPStatus
 
 from django.test import TestCase
@@ -14,5 +15,10 @@ class TestRoutes(TestCase):
 
     def test_home_page(self):
         url = reverse('news:home')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+    def test_detail_page(self):
+        url = reverse('news:detail', args=(self.news.id,))
         response = self.client.get(url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
