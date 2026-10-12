@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from django.conf import settings
-from django.test import 
+from django.test import TestCase
 from django.urls import reverse
 
 from news.models import News
