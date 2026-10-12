@@ -3,6 +3,8 @@ from http import HTTPStatus
 from django.test import TestCase
 from django.urls import reverse
 
+from news.models import News
+
 
 class TestRoutes(TestCase):
 
