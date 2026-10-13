@@ -4,7 +4,9 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
-from news.models import News
+from news.models import Comment, News
+
+User = get_user_model()
 
 
 class TestHomePage(TestCase):
@@ -35,3 +37,27 @@ class TestHomePage(TestCase):
         sorted_dates = sorted(all_dates, reverse=True)
         # Проверяем, что исходный список был отсортирован правильно.
         self.assertEqual(all_dates, sorted_dates)
+
+class TestDetailPage(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.news = News.objects.create(
+            title='Тестовая новость', text='Просто текст.'
+        )
+        # Сохраняем в переменную адрес страницы с новостью:
+        cls.detail_url = reverse('news:detail', args=(cls.news.id,))
+        cls.author = User.objects.create(username='Комментатор')
+        # Запоминаем текущее время:
+        now = datetime.now()
+        # Создаём комментарии в цикле.
+        for index in range(10):
+            # Создаём объект и записываем его в переменную.
+            comment = Comment.objects.create(
+                news=cls.news, author=cls.author, text=f'Tекст {index}',
+            )
+            # Сразу после создания меняем время создания комментария.
+            comment.created = now + timedelta(days=index)
+            # И сохраняем эти изменения.
+            comment.save()
+
