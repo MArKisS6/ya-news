@@ -61,6 +61,7 @@ class TestDetailPage(TestCase):
             comment.created = now + timedelta(days=index)
             # И сохраняем эти изменения.
             comment.save()
+
     def test_comments_order(self):
         response = self.client.get(self.detail_url)
         # Проверяем, что объект новости находится в словаре контекста
@@ -75,4 +76,5 @@ class TestDetailPage(TestCase):
         # Сортируем временные метки, менять порядок сортировки не надо.
         sorted_timestamps = sorted(all_timestamps)
         # Проверяем, что временные метки отсортированы правильно.
-        self.assertEqual(all_timestamps, sorted_timestamps) 
+        self.assertEqual(all_timestamps, sorted_timestamps)
+
