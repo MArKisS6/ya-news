@@ -28,3 +28,12 @@ class TestCommentCreation(TestCase):
         cls.auth_client.force_login(cls.user)
         # Данные для POST-запроса при создании комментария.
         cls.form_data = {'text': cls.COMMENT_TEXT}
+
+    def test_anonymous_user_cant_create_comment(self):
+        # Совершаем запрос от анонимного клиента, в POST-запросе отправляем
+        # предварительно подготовленные данные формы с текстом комментария.     
+        self.client.post(self.url, data=self.form_data)
+        # Считаем количество комментариев.
+        comments_count = Comment.objects.count()
+        # Ожидаем, что комментариев в базе нет - сравниваем с нулём.
+        self.assertEqual(comments_count, 0)
