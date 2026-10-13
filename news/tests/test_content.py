@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 
 from news.models import Comment, News
+from news.forms import CommentForm
 
 User = get_user_model()
 
@@ -38,6 +39,7 @@ class TestHomePage(TestCase):
         sorted_dates = sorted(all_dates, reverse=True)
         # Проверяем, что исходный список был отсортирован правильно.
         self.assertEqual(all_dates, sorted_dates)
+
 
 class TestDetailPage(TestCase):
 
@@ -82,7 +84,6 @@ class TestDetailPage(TestCase):
         response = self.client.get(self.detail_url)
         self.assertNotIn('form', response.context)
 
-        
     def test_authorized_client_has_form(self):
         # Авторизуем клиент при помощи ранее созданного пользователя.
         self.client.force_login(self.author)
@@ -90,4 +91,3 @@ class TestDetailPage(TestCase):
         self.assertIn('form', response.context)
         # Проверим, что объект формы соответствует нужному классу формы.
         self.assertIsInstance(response.context['form'], CommentForm)
-
