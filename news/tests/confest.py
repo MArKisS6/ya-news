@@ -1,6 +1,10 @@
 # news/tests/conftest.py
+from datetime import datetime, timedelta
+
 import pytest
+from django.conf import settings
 from django.test.client import Client
+from django.utils import timezone
 
 from news.models import Comment, News
 
@@ -53,3 +57,35 @@ def comment(news, author):
 def news_id_for_args(news):
     """Возвращает кортеж с id новости для args в reverse."""
     return (news.id,)
+
+
+@pytest.fixture
+def news_bulk():
+    """Фикстура создаёт пакет новостей с разными датами."""
+    today = datetime.today()
+    all_news = [
+        News(
+            title=f'Новость {index}',
+            text='Просто текст.',
+            date=today - timedelta(days=index)
+        )
+        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
+    ]
+    return News.objects.bulk_create(all_news)
+
+
+@pytest.fixture
+def comments(news, author):
+    """Фикстура создаёт 10 комментариев с разным временем."""
+    now = timezone.now()
+    comments_list = []
+    for index in range(10):
+        comment = Comment.objects.create(
+            news=news,
+            author=author,
+            text=f'Текст {index}',
+        )
+        comment.created = now + timedelta(days=index)
+        comment.save()
+        comments_list.append(comment)
+    return comments_list
