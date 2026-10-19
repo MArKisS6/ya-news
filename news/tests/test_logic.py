@@ -1,3 +1,4 @@
+# news/tests/test_logic.py
 from http import HTTPStatus
 
 import pytest
@@ -53,10 +54,10 @@ def test_author_can_edit_comment(author_client, comment, form_data):
     assert comment.text == form_data['text']
 
 
-def test_other_user_cant_edit_comment(not_author_client, comment, form_data):
+def test_other_user_cant_edit_comment(reader_client, comment, form_data):
     """Чужой не может редактировать комментарий."""
     url = reverse('news:edit', args=(comment.id,))
-    response = not_author_client.post(url, data=form_data)
+    response = reader_client.post(url, data=form_data)
     assert response.status_code == HTTPStatus.NOT_FOUND
     comment_from_db = Comment.objects.get(id=comment.id)
     assert comment.text == comment_from_db.text
@@ -71,9 +72,9 @@ def test_author_can_delete_comment(author_client, comment):
     assert Comment.objects.count() == 0
 
 
-def test_other_user_cant_delete_comment(not_author_client, comment):
+def test_other_user_cant_delete_comment(reader_client, comment):
     """Чужой не может удалить комментарий."""
     url = reverse('news:delete', args=(comment.id,))
-    response = not_author_client.post(url)
+    response = reader_client.post(url)
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert Comment.objects.count() == 1
