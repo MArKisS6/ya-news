@@ -89,3 +89,9 @@ def comments(news, author):
         comment.save()
         comments_list.append(comment)
     return comments_list
+
+
+@pytest.fixture
+def form_data():
+    """Данные для POST-запроса при создании/редактировании комментария."""
+    return {'text': 'Текст комментария'}
