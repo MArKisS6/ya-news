@@ -1,3 +1,5 @@
+# news/tests/test_content.py
+# news/tests/test_content.py
 import pytest
 from django.urls import reverse
 
